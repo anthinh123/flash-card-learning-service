@@ -1,36 +1,45 @@
 package com.thinh.flashcardlearningservice.service.impl;
 
 import com.thinh.flashcardlearningservice.dto.FlashCardDto;
+import com.thinh.flashcardlearningservice.entity.FlashCard;
+import com.thinh.flashcardlearningservice.exception.ResourceNotFoundException;
+import com.thinh.flashcardlearningservice.repository.FlashCardRepository;
 import com.thinh.flashcardlearningservice.service.FlashCardService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class FlashCardServiceImpl implements FlashCardService {
+    @Autowired
+    private FlashCardRepository flashCardRepository;
+
+    private ModelMapper modelMapper;
+
     @Override
     public FlashCardDto getFlashCardById(long id) {
-        return mockData(1);
+        FlashCard flashCard = flashCardRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("FlashCard", "id", id));
+        return modelMapper.map(flashCard, FlashCardDto.class);
     }
 
     @Override
     public List<FlashCardDto> getAllFlashCard() {
-        List<FlashCardDto> list = new ArrayList<>();
-        list.add(mockData(1));
-        list.add(mockData(2));
-        list.add(mockData(3));
-        return list;
+        List<FlashCard> flashCards = flashCardRepository.findAll();
+        List<FlashCardDto> flashCardDtos = flashCards
+                .stream()
+                .map(flashCard -> modelMapper.map(flashCard, FlashCardDto.class))
+                .toList();
+        return flashCardDtos;
     }
 
     @Override
     public FlashCardDto saveFlashCard(FlashCardDto savingFlashCard) {
-        return savingFlashCard;
-    }
-
-    private FlashCardDto mockData(long id) {
-        return new FlashCardDto(id, "See you soon", "Sớm gặp lại bạn", "", "", false);
+        FlashCard flashCard = flashCardRepository.save(modelMapper.map(savingFlashCard, FlashCard.class));
+        return modelMapper.map(flashCard, FlashCardDto.class);
     }
 }

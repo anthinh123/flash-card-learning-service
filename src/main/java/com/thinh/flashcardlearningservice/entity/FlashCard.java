@@ -1,6 +1,6 @@
-package com.thinh.flashcardlearningservice.dto;
+package com.thinh.flashcardlearningservice.entity;
 
-import com.thinh.flashcardlearningservice.entity.FlashCard;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +9,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class FlashCardDto {
-    @NotEmpty
-    private long id;
+@NoArgsConstructor
+@Entity
+@Table(name = "flashcards")
+public class FlashCard {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotEmpty
     private String original;

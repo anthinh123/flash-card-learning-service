@@ -15,8 +15,8 @@ import java.util.List;
 public class FlashCardController {
     private FlashCardService flashCardService;
 
-    @GetMapping("{employee-id}")
-    public ResponseEntity<FlashCardDto> getFlashCardById(@PathVariable("employee-id") Long id){
+    @GetMapping("{flashcard-id}")
+    public ResponseEntity<FlashCardDto> getFlashCardById(@PathVariable("flashcard-id") Long id){
         return new ResponseEntity<>(flashCardService.getFlashCardById(id), HttpStatus.OK);
     }
 
